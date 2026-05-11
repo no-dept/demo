@@ -27,7 +27,7 @@ public class AspectProxyHandler implements InvocationHandler {
     Object result = method.invoke(target, args);
 
     // 3. 핵심 기능 실행 후 (After)
-    System.out.println("hihihihihi");
+    System.out.println("bye");
     System.out.println("<<< [AOP] " + target.getClass().getSimpleName()
         + "." + method.getName() + "() 실행 종료");
 
