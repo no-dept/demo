@@ -6,9 +6,11 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 
 public class App {
+    private static final int DEFAULT_PORT = 8080;
+
     public static void main(String[] args) throws Exception {
         // 1. Jetty 서버 생성
-        int port = Integer.parseInt(System.getenv().getOrDefault("PORT", "8080"));
+        int port = resolvePort();
         Server server = new Server(port);
         
         // 2. ServletContextHandler 생성
@@ -37,5 +39,18 @@ public class App {
         server.start();
         System.out.println("Jetty started at http://localhost:" + port);
         server.join(); // main 스레드가 종료되지 않게 대기
+    }
+
+    private static int resolvePort() {
+        String raw = System.getenv("PORT");
+        if (raw == null || raw.isBlank()) {
+            return DEFAULT_PORT;
+        }
+        try {
+            return Integer.parseInt(raw.trim());
+        } catch (NumberFormatException e) {
+            System.err.println("Invalid PORT env value '" + raw + "', falling back to " + DEFAULT_PORT);
+            return DEFAULT_PORT;
+        }
     }
 }
